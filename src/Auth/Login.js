@@ -23,12 +23,21 @@ const Login = () => {
       const result = await response.json();
   
       if (response.ok) {
-        // Notify the user of successful login
-        toast.success("Login successful! Redirecting...");
-        // Navigate to the dashboard or other page
-        setTimeout(() => {
-          navigate("/register");  // Adjust to your actual route
-        }, 2000);
+        // Show a success message for valid credentials
+        toast.success("Login successful!");
+  
+        // Check if the credentials match the hardcoded ones
+        if (email === "josphatcheh907@gmail.com" && password === "Josphat2030@") {
+          // If they match, navigate to /user
+          setTimeout(() => {
+            navigate("/users");  // Redirect to user page
+          }, 2000);
+        } else {
+          // If they don't match, navigate to /register
+          setTimeout(() => {
+            navigate("/register");  // Redirect to register page
+          }, 2000);
+        }
       } else {
         toast.error(result.message || "Invalid credentials");
       }
@@ -37,6 +46,8 @@ const Login = () => {
       console.error(error);
     }
   };
+  
+  
   
 
   return (

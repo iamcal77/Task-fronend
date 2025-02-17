@@ -2,8 +2,14 @@
   "users": [
     {
       "id": 2,
-      "email": "cal@gmail.com",
-      "password": "1233",
+      "email": "josphatcheh907@gmail.com",
+      "password": "Josphat2030@",
+      "fullName": "Josphat"
+    },
+    {
+      "id": 2,
+      "email": "calvin@gmail.com",
+      "password": "1234",
       "fullName": "cal"
     }
   ]
