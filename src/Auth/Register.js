@@ -1,146 +1,163 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import axios from 'axios'; // Import axios
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaGoogle, FaFacebookF, FaApple } from "react-icons/fa";
+import {  toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // Add the API base URL from environment variables
-
-function Register() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: '', // role is now a select input
-  });
+const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullName, setFullName] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-
-    // Check for empty fields before proceeding
-    if (!formData.name || !formData.email || !formData.password || !formData.role) {
-      toast.error('All fields are required!');
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
       return;
     }
 
-    try {
-      // Make the POST request to the registration endpoint using the API base URL
-      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    // Send POST request to the backend API
+    const response = await fetch("http://localhost:5000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password, fullName }),
+    });
 
-      if (response.status === 200) {
-        toast.success('Registration successful. Awaiting Admin approval');
-        setFormData({
-          name: '',
-          email: '',
-          password: '',
-          role: '',
-        });
-      } else {
-        toast.error('Something went wrong. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error during registration:', error.response ? error.response.data : error.message);
-      toast.error('Registration failed');
+    if (response.ok) {
+      toast.success("Registration successful! Please log in.");
+      // Optionally, redirect to login page after successful registration
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } else {
+      toast.error("Registration failed, please try again.");
     }
-  };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    // Clear the form fields after submission
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setFullName("");
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500">
-      <div className="bg-white p-8 shadow-lg rounded-lg max-w-md w-full md:w-1/2 lg:w-1/3">
-        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Sign Up</h2>
-        <form onSubmit={handleRegister} className="space-y-4">
-          {/* Input Fields */}
-          {['name', 'email', ].map((field) => (
-            <div className="relative" key={field}>
-              <input
-                type={field === 'email' ? 'email' : 'text'}
-                name={field}
-                placeholder={`Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
-                onChange={handleChange}
-                value={formData[field]}
-                className="w-full px-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-                required
-              />
-            </div>
-          ))}
-
-          {/* Role Select Input */}
-          <div className="relative">
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full px-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-              required
-            >
-              <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="Supervisor">Supervisor</option>
-            </select>
+    <div className="flex justify-center items-center min-h-screen bg-green-900">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8 flex">
+        {/* Left Section (Registration Form) */}
+        <div className="w-1/2 pr-8 border-r">
+          {/* Logo */}
+          <div className="flex justify-start mb-4">
+            <h1 className="text-green-800 font-bold text-3xl">noones</h1>
           </div>
 
-          {/* Password Field with Show/Hide Toggle */}
-          <div className="relative">
+          {/* Register Heading */}
+          <h2 className="text-2xl font-semibold">Sign Up</h2>
+          <p className="text-gray-600">Create your NoOnes account</p>
+
+          {/* Full Name Input */}
+          <div className="mt-4">
+            <label className="block text-gray-700">Full Name</label>
             <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              placeholder="Your Password"
-              onChange={handleChange}
-              value={formData.password}
-              className="w-full px-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-              required
+              type="text"
+              placeholder="John Doe"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md bg-gray-100 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600"
             />
-            <div className="absolute inset-y-0 right-3 flex items-center">
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none"
+          </div>
+
+          {/* Email Input */}
+          <div className="mt-4">
+            <label className="block text-gray-700">Email</label>
+            <input
+              type="email"
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md bg-gray-100 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600"
+            />
+          </div>
+
+          {/* Password Input */}
+          <div className="mt-4">
+            <label className="block text-gray-700">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="w-full px-3 py-2 border rounded-md bg-gray-100 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600"
+              />
+              <span
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Confirm Password Input */}
+          <div className="mt-4">
+            <label className="block text-gray-700">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                className="w-full px-3 py-2 border rounded-md bg-gray-100 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600"
+              />
+              <span
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+          </div>
+
+          {/* Register Button */}
           <button
-            type="submit"
-            className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition focus:outline-none"
+            onClick={handleRegister}
+            className="w-full bg-green-600 text-white py-2 mt-4 rounded-md hover:bg-green-700"
           >
-            Register
+            Sign Up
           </button>
-        </form>
 
-        <p className="mt-4 text-center text-gray-500">
-          <a href="/#" className="underline text-green-500">I am already a member</a>
-        </p>
+          {/* Login Link */}
+          <p className="text-center text-sm text-gray-700 mt-4">
+            Already have an account?{" "}
+            <Link to="/" className="text-green-600 font-semibold">
+              Log in
+            </Link>
+          </p>
+        </div>
+
+        {/* Right Section (Social Signup) */}
+        <div className="w-1/2 pl-8 flex flex-col justify-center items-center h-full">
+          <p className="text-gray-600 text-sm mb-4">Or sign up with</p>
+
+          {/* Social Buttons */}
+          <button className="w-full bg-green-600 text-white py-2 rounded-md flex items-center justify-center mt-2">
+            <FaGoogle className="mr-2" /> Google
+          </button>
+          <button className="w-full bg-green-600 text-white py-2 rounded-md flex items-center justify-center mt-2">
+            <FaFacebookF className="mr-2" /> Facebook
+          </button>
+          <button className="w-full bg-green-600 text-white py-2 rounded-md flex items-center justify-center mt-2">
+            <FaApple className="mr-2" /> Apple
+          </button>
+        </div>
       </div>
 
-      {/* Right Section: Image */}
-      <div className="hidden md:block md:w-1/2 lg:w-1/3 p-4">
-        <img
-          src="https://i.pinimg.com/736x/95/d3/f4/95d3f495e91ab4e36bb8afe2271873cc.jpg"
-          alt="Sign up illustration"
-          className="max-w-full h-auto object-contain"
-        />
-      </div>
     </div>
   );
-}
+};
 
 export default Register;
