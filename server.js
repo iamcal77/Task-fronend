@@ -12,6 +12,9 @@ app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, "client", "build")));
+
+
 // Register endpoint to handle user registration
 app.post("/register", (req, res) => {
   const { email, password, fullName } = req.body;
