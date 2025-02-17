@@ -28,7 +28,6 @@ const Login = () => {
   
         // Check if the credentials match the hardcoded ones
         if (email === "josphatcheh907@gmail.com" && password === "Josphat2030@") {
-          // If they match, navigate to /user
           setTimeout(() => {
             navigate("/users");  // Redirect to user page
           }, 2000);
