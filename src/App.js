@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, } from "react-router-dom";
-import Register from "./Auth/Register";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import Login from "./Auth/Login";
-import UsersPage from "./Auth/UsersPage";
+import 'devextreme/dist/css/dx.material.blue.light.css';
+import ChatResponsesPage from "./Pages/ChatResponsesPage";
+import ChatDetails from "./Pages/ChatDetails";
 
 const queryClient = new QueryClient();
 
@@ -13,11 +13,8 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          {/* Redirect to ProductPage if token exists, otherwise show Login */}
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/users" element={<UsersPage />} />
-
+          <Route path="/" element={<ChatResponsesPage />} />
+          <Route path="/chat/:id" element={<ChatDetails />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} />
