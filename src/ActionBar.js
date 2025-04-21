@@ -59,10 +59,10 @@ function ActionBar({
 
   return (
     <div className="flex justify-between mb-1 items-center p-4 bg-transparent fixed top-4 left-64 w-[calc(100%-16rem)] z-20">
-      <div>
+      <div className='w-full lg:w-auto'>
         <h1 className="text-2xl font-bold">{pageTitle}</h1> {/* Display the page title */}
       </div>
-      <div className="ml-auto space-x-4 flex">
+      <div className="w-full lg:w-auto flex flex-wrap justify-end gap-2">
         {showAddButton && (
           <button onClick={onAdd} className="text-green-500 px-4 py-2 rounded-lg flex items-center space-x-2">
             <FaPlus className="text-lg" />

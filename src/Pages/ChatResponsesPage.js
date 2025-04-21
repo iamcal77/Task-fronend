@@ -52,7 +52,7 @@ const ChatResponses = () => {
           };
     
   return (
-    <div className='min-h-screen p-8'>
+<div className='min-h-screen px-4 sm:px-6 lg:px-8 py-6'>
 
         <ActionBar
         onAdd={()=>toggleForm()}
@@ -71,7 +71,7 @@ const ChatResponses = () => {
 
         />
         }
-        <div className='mt-10 fixed w-full mx-auto'>
+          <div className="mt-10 w-full overflow-x-auto max-h-[80vh] overflow-y-auto">
             <DataGrid
             dataSource={responses}
             onRowClick={(e)=>setSelectedRow(e.data)}
@@ -81,6 +81,7 @@ const ChatResponses = () => {
                   handleDetailsClick(e.data.id);
                 }
               }}
+            showBorders={true}
 
             >
         <FilterRow visible={true} />
