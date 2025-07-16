@@ -58,7 +58,7 @@ function ActionBar({
   };
 
   return (
-    <div className="flex justify-between mb-1 items-center p-4 bg-transparent fixed top-4 left-64 w-[calc(100%-16rem)] z-20">
+    <div className="flex justify-between mb-1 items-center p-4 bg-transparent fixed top-14 left-64 w-[calc(100%-16rem)] z-20">
       <div className='w-full lg:w-auto'>
         <h1 className="text-2xl font-bold">{pageTitle}</h1> {/* Display the page title */}
       </div>

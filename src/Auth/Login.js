@@ -1,152 +1,118 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
-import { FaEye, FaEyeSlash, FaGoogle, FaFacebookF, FaApple } from "react-icons/fa"; 
-import {toast } from "react-toastify";  // Import toastify components
-import "react-toastify/dist/ReactToastify.css";  // Import the CSS for toast notifications
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Login({ setToken }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // Access the API base URL from .env
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error('Please enter both email and password.');
+      return;
+    }
+
     try {
-      const response = await fetch("https://noones-com.onrender.com/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post(`${API_BASE_URL}/api/Auth/login`, {
+        email,
+        password,
       });
-  
-      const result = await response.json();
-  
-      if (response.ok) {
-        // Show a success message for valid credentials
-        toast.success("Login successful!");
-  
-        // Check if the credentials match the hardcoded ones
-        if (email === "josphatcheh907@gmail.com" && password === "Josphat2030@") {
-          setTimeout(() => {
-            navigate("/users");  // Redirect to user page
-          }, 2000);
+
+      const token = response.data.token;
+      if (token) {
+        setToken(token);
+        localStorage.setItem('token', token);
+        toast.success('Login successful');
+
+        // Fetch the user role
+        const userResponse = await axios.get(`${API_BASE_URL}/api/User`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const role = userResponse.data.role;
+
+        if (role === 'Farmer') {
+          navigate('/products');
         } else {
-          // If they don't match, navigate to /register
-          setTimeout(() => {
-            navigate("/register");  // Redirect to register page
-          }, 2000);
+          navigate('/products');
         }
-      } else {
-        toast.error(result.message || "Invalid credentials");
       }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-      console.error(error);
+      console.error('Login error:', error.response ? error.response.data : error.message);
+      toast.error('Login failed. Please check your credentials.');
     }
   };
-  
-  
-  
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-green-900">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8 flex">
-        {/* Left Section (Email & Password) */}
-        <div className="w-1/2 pr-8 border-r">
-          {/* Logo */}
-          <div className="flex justify-start mb-4">
-            <h1 className="text-green-800 font-bold text-3xl">noones</h1>
-          </div>
-
-          {/* Login Heading */}
-          <h2 className="text-2xl font-semibold">Log in</h2>
-          <p className="text-gray-600">Access your NoOnes account</p>
-
-          {/* Email Input */}
-          <div className="mt-4">
-            <label className="block text-gray-700">Email</label>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500">
+      <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow-lg relative">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Member Login
+        </h2>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
             <input
-              type="email"
+              type="text"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@email.com"
-              className="w-full px-3 py-2 border rounded-md bg-gray-100 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600"
+              className="w-full px-4 py-3 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-purple-400 focus:outline-none"
+              required
             />
           </div>
-
-          {/* Password Input */}
-          <div className="mt-4">
-            <label className="block text-gray-700">Password</label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full px-3 py-2 border rounded-md bg-gray-100 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600"
-              />
-              <span
-                className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-purple-400 focus:outline-none"
+              required
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
           </div>
-
-          {/* Error Message */}
-          {/* This is no longer necessary as you are using toast for error messages */}
-
-          {/* Forgot Password & Login with Phone */}
-          <div className="flex justify-between items-center mt-2">
-            <Link to="/forgot-password" className="text-green-600 text-sm">Forgot password?</Link>
-          </div>
-
-          {/* Continue Button */}
           <button
-            onClick={handleLogin}
-            className="w-full bg-green-600 text-white py-2 mt-4 rounded-md"
+            type="submit"
+            className="w-full py-3 text-white bg-green-500 rounded-full hover:bg-green-600 focus:ring-4 focus:ring-green-300"
           >
-            Log in
+            LOGIN
           </button>
-
-          {/* Phone Login */}
-          <p className="text-center text-sm text-gray-700 mt-4">
-            <Link to="/phone-login" className="text-green-600 font-semibold">
-              Log in with your phone number
-            </Link>
-          </p>
+        </form>
+        <div className="mt-4 text-center">
+          <a
+            href="/forgot"
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            Forgot Email / Password?
+          </a>
         </div>
-
-        {/* Right Section (Social Login) */}
-        <div className="w-1/2 pl-8 flex flex-col justify-center items-center h-full">
-          <p className="text-gray-600 text-sm mb-4">Or log in with</p>
-
-          {/* Social Buttons */}
-          <button className="w-full bg-green-600 text-white py-2 rounded-md flex items-center justify-center mt-2">
-            <FaGoogle className="mr-2" /> Google
-          </button>
-          <button className="w-full bg-green-600 text-white py-2 rounded-md flex items-center justify-center mt-2">
-            <FaFacebookF className="mr-2" /> Facebook
-          </button>
-          <button className="w-full bg-green-600 text-white py-2 rounded-md flex items-center justify-center mt-2">
-            <FaApple className="mr-2" /> Apple
-          </button>
-
-          {/* Signup Link */}
-          <p className="text-center text-sm text-gray-700 mt-4">
-            Don’t have an account?{" "}
-            <Link to="/register" className="text-green-600 font-semibold">
-              Join us
-            </Link>
-          </p>
+        <div className="mt-6 text-center">
+          <a href="/register" className="text-sm text-gray-700 hover:underline">
+            Create your Account &rarr;
+          </a>
         </div>
       </div>
-
-      {/* Toast container to display notifications */}
     </div>
   );
-};
+}
 
 export default Login;
