@@ -11,7 +11,6 @@ const fetchProducts = async() =>{
 };
 const createProduct = async (newProduct) => {
   const token = localStorage.getItem('token');
-  console.log("Here is me",token)
   const response = await axios.post(`${API_BASE_URL}/api/Product`, newProduct,{
     headers : 
    { 'Authorization' : `Bearer ${token}`}

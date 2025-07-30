@@ -7,6 +7,9 @@ import ProductList from "./Pages/ProductList";
 import Login from "./Auth/Login";
 import { useEffect, useState } from "react";
 import DashboardLayout from "./DashboardLayout";
+import Orders from "./Pages/Orders";
+import CooperativesPage from "./Pages/CooperativesPage";
+import Extensions from "./Pages/Extensions";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,12 @@ const App = () => {
          <Route path="/" element={<DashboardLayout />}>
 
         <Route path="/products" element={<ProductList token = {localStorage.getItem ('token')} />} />
+        <Route path="/orders" element={<Orders token = {localStorage.getItem ('token')} />} />
+        <Route path="/cooperatives" element={<CooperativesPage token = {localStorage.getItem ('token')} />} />
+        <Route path="/extensions" element={<Extensions token = {localStorage.getItem ('token')} />} />
+
+
+
         </Route>
         </Routes>
       </BrowserRouter>

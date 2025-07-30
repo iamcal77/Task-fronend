@@ -4,18 +4,22 @@ import { RiFileExcel2Fill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
 import * as XLSX from 'xlsx';
+import { CiBookmarkCheck } from "react-icons/ci";
+
 
 function ActionBar({
   pageTitle, // New prop for dynamic page title
   onAdd,
   onDelete,
   onEdit,
+  onComplete,
   showBackButton,
   showAddButton = true,
   showEditButton = true,
   showDeleteButton = true,
   showExportToExcel = true,
   showExportToPDF = true,
+  showComplete = true
 }) {
   const navigate = useNavigate();
 
@@ -102,6 +106,12 @@ function ActionBar({
           <button onClick={handleBackClick} className="text-blue-500 px-4 py-2 rounded-lg flex items-center space-x-2">
             <FaArrowLeft className="text-lg" />
             <span>Back</span>
+          </button>
+        )}
+        {showComplete && (
+          <button onClick={onComplete} className="text-green-500 px-4 py-2 rounded-lg flex items-center space-x-2">
+            <CiBookmarkCheck className="text-lg" />
+            <span>Mark As Complete</span>
           </button>
         )}
       </div>

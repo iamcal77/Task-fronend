@@ -25,12 +25,12 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/users" className="flex items-center gap-3 hover:text-green-400">
+            <Link to="/cooperatives" className="flex items-center gap-3 hover:text-green-400">
               <FaChartBar className='text-red-500' /> Cooperatives
             </Link>
           </li>
           <li>
-            <Link to="/users" className="flex items-center gap-3 hover:text-green-400">
+            <Link to="/orders" className="flex items-center gap-3 hover:text-green-400">
               <TbBorderSides className='text-yellow-600' /> Orders
             </Link>
             </li>
@@ -40,7 +40,7 @@ const Sidebar = () => {
             </Link>
             </li>
             <li>
-            <Link to="/users" className="flex items-center gap-3 hover:text-green-400">
+            <Link to="/extensions" className="flex items-center gap-3 hover:text-green-400">
               <IoExtensionPuzzleOutline className='text-blue-700' /> ExtensionPosts
             </Link>
           </li>
